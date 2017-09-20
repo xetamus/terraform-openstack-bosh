@@ -10,6 +10,6 @@ output "deploy-bosh-id" {
   value = "${null_resource.deploy-bosh.id}"
 }
 
-output "bosh-floating-ip" {
-  value = "${openstack_compute_floatingip_associate_v2.bosh-floating-ip.floating_ip}"
+output "jumpbox-floating-ip" {
+  value = "${openstack_compute_floatingip_associate_v2.jumpbox-floating-ip.floating_ip}"
 }

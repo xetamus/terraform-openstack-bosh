@@ -48,7 +48,7 @@ resource "openstack_compute_keypair_v2" "bosh-keypair" {
   public_key =  "${chomp(file("${var.ssh_pubkey}"))}"
 }
 
-resource "openstack_compute_floatingip_v2" "bosh-floating-ip" {
+resource "openstack_compute_floatingip_v2" "jumpbox-floating-ip" {
   pool = "${var.external_network}"
 }
 
@@ -66,18 +66,18 @@ resource "openstack_compute_instance_v2" "bosh-jumpbox" {
   }
 }
 
-resource "openstack_compute_floatingip_associate_v2" "bosh-floating-ip" {
+resource "openstack_compute_floatingip_associate_v2" "jumpbox-floating-ip" {
   depends_on = ["openstack_networking_secgroup_rule_v2.bosh-agent",
                 "openstack_networking_secgroup_rule_v2.bosh-director",
                 "openstack_networking_secgroup_rule_v2.bosh-ssh"]
 
-  floating_ip = "${openstack_compute_floatingip_v2.bosh-floating-ip.address}"
+  floating_ip = "${openstack_compute_floatingip_v2.jumpbox-floating-ip.address}"
   instance_id = "${openstack_compute_instance_v2.bosh-jumpbox.id}"
   fixed_ip = "${openstack_compute_instance_v2.bosh-jumpbox.network.0.fixed_ip_v4}"
 
   connection {
     type = "ssh"
-    host = "${openstack_compute_floatingip_v2.bosh-floating-ip.address}"
+    host = "${openstack_compute_floatingip_v2.jumpbox-floating-ip.address}"
     user = "ubuntu"
     private_key = "${chomp(file("${var.ssh_privkey}"))}"
   }
@@ -92,12 +92,12 @@ resource "openstack_compute_floatingip_associate_v2" "bosh-floating-ip" {
 
 resource "null_resource" "deploy-bosh" {
   triggers {
-    floating_ip_associated = "${openstack_compute_floatingip_associate_v2.bosh-floating-ip.floating_ip}"
+    floating_ip_associated = "${openstack_compute_floatingip_associate_v2.jumpbox-floating-ip.floating_ip}"
   }
 
   connection {
     type = "ssh"
-    host = "${openstack_compute_floatingip_associate_v2.bosh-floating-ip.floating_ip}"
+    host = "${openstack_compute_floatingip_associate_v2.jumpbox-floating-ip.floating_ip}"
     user = "ubuntu"
     private_key = "${chomp(file("${var.ssh_privkey}"))}"
   }
