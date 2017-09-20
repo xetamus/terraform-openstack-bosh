@@ -1,0 +1,11 @@
+prefix = ""
+external_network = ""
+external_network_uuid = ""
+
+os_auth_url = ""
+os_domain_name = ""
+os_username = ""
+os_password = ""
+os_tenant = ""
+
+dns = []
