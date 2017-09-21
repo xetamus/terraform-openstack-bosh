@@ -95,6 +95,10 @@ resource "null_resource" "deploy-bosh" {
     floating_ip_associated = "${openstack_compute_floatingip_associate_v2.jumpbox-floating-ip.floating_ip}"
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   connection {
     type = "ssh"
     host = "${openstack_compute_floatingip_associate_v2.jumpbox-floating-ip.floating_ip}"
