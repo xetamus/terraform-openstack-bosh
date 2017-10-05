@@ -50,6 +50,10 @@ resource "openstack_compute_keypair_v2" "bosh-keypair" {
 
 resource "openstack_compute_floatingip_v2" "jumpbox-floating-ip" {
   pool = "${var.external_network}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "openstack_compute_instance_v2" "bosh-jumpbox" {
@@ -74,6 +78,10 @@ resource "openstack_compute_floatingip_associate_v2" "jumpbox-floating-ip" {
   floating_ip = "${openstack_compute_floatingip_v2.jumpbox-floating-ip.address}"
   instance_id = "${openstack_compute_instance_v2.bosh-jumpbox.id}"
   fixed_ip = "${openstack_compute_instance_v2.bosh-jumpbox.network.0.fixed_ip_v4}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   connection {
     type = "ssh"
