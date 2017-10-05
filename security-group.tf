@@ -44,20 +44,6 @@ resource "openstack_networking_secgroup_rule_v2" "bosh-internal" {
   port_range_max = 65535
 }
 
-resource "openstack_networking_secgroup_rule_v2" "egress-ipv4" {
-  security_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
-  direction = "egress"
-  ethertype = "IPv4"
-  remote_ip_prefix = "0.0.0.0/0"
-}
-
-resource "openstack_networking_secgroup_rule_v2" "egress-ipv6" {
-  security_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
-  direction = "egress"
-  ethertype = "IPv6"
-  remote_ip_prefix = "::/0"
-}
-
 resource "openstack_networking_secgroup_rule_v2" "bosh-icmp" {
   security_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
   remote_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
