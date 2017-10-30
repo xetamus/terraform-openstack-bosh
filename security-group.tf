@@ -1,10 +1,14 @@
 resource "openstack_networking_secgroup_v2" "bosh-secgroup" {
+  count = "${var.resource_count}"
+
   name = "${var.prefix}-bosh-secgroup"
   description = "BOSH Security Group (${var.prefix})"
   region = "${var.os_region}"
 }
 
 resource "openstack_networking_secgroup_rule_v2" "bosh-ssh" {
+  count = "${var.resource_count}"
+
   security_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
   direction = "ingress"
   ethertype = "IPv4"
@@ -15,6 +19,8 @@ resource "openstack_networking_secgroup_rule_v2" "bosh-ssh" {
 }
 
 resource "openstack_networking_secgroup_rule_v2" "bosh-agent" {
+  count = "${var.resource_count}"
+
   security_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
   direction = "ingress"
   ethertype = "IPv4"
@@ -25,6 +31,8 @@ resource "openstack_networking_secgroup_rule_v2" "bosh-agent" {
 }
 
 resource "openstack_networking_secgroup_rule_v2" "bosh-director" {
+  count = "${var.resource_count}"
+
   security_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
   direction = "ingress"
   ethertype = "IPv4"
@@ -35,6 +43,8 @@ resource "openstack_networking_secgroup_rule_v2" "bosh-director" {
 }
 
 resource "openstack_networking_secgroup_rule_v2" "bosh-internal" {
+  count = "${var.resource_count}"
+
   security_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
   remote_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
   direction = "ingress"
@@ -45,6 +55,8 @@ resource "openstack_networking_secgroup_rule_v2" "bosh-internal" {
 }
 
 resource "openstack_networking_secgroup_rule_v2" "bosh-icmp" {
+  count = "${var.resource_count}"
+
   security_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
   remote_group_id = "${openstack_networking_secgroup_v2.bosh-secgroup.id}"
   direction = "ingress"

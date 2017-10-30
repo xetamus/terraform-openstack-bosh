@@ -1,3 +1,5 @@
+variable "resource_count" { default = 1 }
+
 variable "os_auth_url" { default = "" }
 variable "os_username" { default = "" }
 variable "os_password" { default = "" }

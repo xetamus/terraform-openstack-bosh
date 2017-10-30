@@ -1,4 +1,14 @@
+resource "null_resource" "director-deployed" {
+  triggers {
+    count = "${var.resource_count}"
+  }
+
+  count = "${var.resource_count ? 0 : 1}"
+}
+
 data "template_file" "vars-yml" {
+  count = "${var.resource_count}"
+
   template = "${file("${path.module}/templates/vars.yml.tpl")}"
 
   vars {
@@ -21,6 +31,8 @@ data "template_file" "vars-yml" {
 }
 
 data "template_file" "cloud-config" {
+  count = "${var.resource_count}"
+
   template = "${file("${path.module}/templates/cloud-config.yml.tpl")}"
 
   vars {
@@ -34,6 +46,8 @@ data "template_file" "cloud-config" {
 }
 
 data "template_file" "install_bosh" {
+  count = "${var.resource_count}"
+
   template = "${file("${path.module}/templates/install_bosh.sh.tpl")}"
 
   vars {
@@ -44,11 +58,15 @@ data "template_file" "install_bosh" {
 }
 
 resource "openstack_compute_keypair_v2" "bosh-keypair" {
+  count = "${var.resource_count}"
+
   name = "${var.prefix}-bosh"
   public_key =  "${chomp(file("${var.ssh_pubkey}"))}"
 }
 
 resource "openstack_compute_floatingip_v2" "jumpbox-floating-ip" {
+  count = "${var.resource_count}"
+
   pool = "${var.external_network}"
 
   lifecycle {
@@ -57,6 +75,8 @@ resource "openstack_compute_floatingip_v2" "jumpbox-floating-ip" {
 }
 
 resource "openstack_compute_instance_v2" "bosh-jumpbox" {
+  count = "${var.resource_count}"
+
   region = "${var.os_region}"
   name = "${var.prefix}-bosh-jumpbox"
   image_name = "${var.image}"
@@ -71,6 +91,8 @@ resource "openstack_compute_instance_v2" "bosh-jumpbox" {
 }
 
 resource "openstack_compute_floatingip_associate_v2" "jumpbox-floating-ip" {
+  count = "${var.resource_count}"
+
   depends_on = ["openstack_networking_secgroup_rule_v2.bosh-agent",
                 "openstack_networking_secgroup_rule_v2.bosh-director",
                 "openstack_networking_secgroup_rule_v2.bosh-ssh"]
@@ -99,6 +121,8 @@ resource "openstack_compute_floatingip_associate_v2" "jumpbox-floating-ip" {
 }
 
 resource "null_resource" "deploy-bosh" {
+  count = "${var.resource_count}"
+
   triggers {
     floating_ip_associated = "${openstack_compute_floatingip_associate_v2.jumpbox-floating-ip.floating_ip}"
   }

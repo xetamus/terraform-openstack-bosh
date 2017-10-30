@@ -1,9 +1,13 @@
 resource "openstack_networking_network_v2" "bosh-network" {
+  count = "${var.resource_count}"
+
   region = "${var.os_region}"
   name = "${var.prefix}-bosh-network"
 }
 
 resource "openstack_networking_subnet_v2" "bosh-subnet" {
+  count = "${var.resource_count}"
+
   region = "${var.os_region}"
   name = "${var.prefix}-bosh-subnet"
   network_id = "${openstack_networking_network_v2.bosh-network.id}"
@@ -13,12 +17,16 @@ resource "openstack_networking_subnet_v2" "bosh-subnet" {
 }
 
 resource "openstack_networking_router_v2" "bosh-router" {
+  count = "${var.resource_count}"
+
   region = "${var.os_region}"
   name = "${var.prefix}-bosh-router"
   external_gateway = "${var.external_network_uuid}"
 }
 
 resource "openstack_networking_router_interface_v2" "bosh-router-interface" {
+  count = "${var.resource_count}"
+
   region = "${var.os_region}"
   router_id = "${openstack_networking_router_v2.bosh-router.id}"
   subnet_id = "${openstack_networking_subnet_v2.bosh-subnet.id}"
