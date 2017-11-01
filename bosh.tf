@@ -155,7 +155,7 @@ resource "null_resource" "deploy-bosh" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo bash install_bosh.sh"
+      "bash install_bosh.sh"
     ]
   }
 }

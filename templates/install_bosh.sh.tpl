@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-apt-get update
-apt-get install -y build-essential zlibc zlib1g-dev ruby ruby-dev openssl libxslt-dev libxml2-dev libssl-dev libreadline6 libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 jq python python-dev python-pip jq
+sudo apt-get update
+sudo apt-get install -y build-essential zlibc zlib1g-dev ruby ruby-dev openssl libxslt-dev libxml2-dev libssl-dev libreadline6 libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 jq python python-dev python-pip jq
 
-pip install yq
+sudo pip install yq
 
 BOSH_CLI_VERSION=${bosh_cli_version}
 if [ -z $BOSH_CLI_VERSION ]; then
@@ -12,8 +12,8 @@ if [ -z $BOSH_CLI_VERSION ]; then
 fi
 
 if [ ! -f /bin/bosh ]; then
-  wget -O /bin/bosh https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-$${BOSH_CLI_VERSION}-linux-amd64
-  chmod +x /bin/bosh
+  sudo wget -O /bin/bosh https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-$${BOSH_CLI_VERSION}-linux-amd64
+  sudo chmod +x /bin/bosh
 fi
 
 wget -O bosh.yml https://raw.githubusercontent.com/cloudfoundry/bosh-deployment/master/bosh.yml
